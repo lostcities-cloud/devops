@@ -1,0 +1,49 @@
+---
+- name: Setting up application service
+  user: root
+  hosts: red, yellow, blue, green
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Remove locks
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /var/cache/apt/archives/lock
+        - /var/lib/dpkg/lock-frontend
+        - /var/lib/apt/lists/lock
+        - /var/lib/dpkg/lock
+    - name: Adding Gcreds
+      ansible.builtin.copy:
+        src: ~/gcreds.json
+        dest: /root/.gcreds
+    - name: Install Apt Dependencies
+      ansible.builtin.apt:
+        name: python3-pip
+        update_cache: true
+    - name: Install Pip 3 Dependencies
+      pip:
+        name: docker
+        executable: pip3
+    - name: Allow 8080
+      community.general.ufw:
+        rule: allow
+        port: '8080'
+        proto: tcp
+    - name: Application Container
+      community.docker.docker_container:
+        name: "{{app_name}}"
+        image: "ghcr.io/lostcities-cloud/{{app_name}}:{{app_version}}"
+        state: started
+        pull: yes
+        ports:
+          - "8080:8080"
+        volumes:
+          - /root/.gcreds:/home/cnb/.gcreds
+        memory: '750M'
+        env:
+          SECRET_MANAGER: "true"
+          SPRING_PROFILES_ACTIVE: stage
+          GOOGLE_APPLICATION_CREDENTIALS: /home/cnb/.gcreds
+

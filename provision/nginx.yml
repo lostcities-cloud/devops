@@ -1,0 +1,36 @@
+---
+- name: Setting up nginx
+  user: root
+  hosts: nginx
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Install Apt Dependencies
+      ansible.builtin.apt:
+        name: nginx
+    - name: install letsencrypt
+      ansible.builtin.apt:
+        name: letsencrypt
+    - name: install certbot-nginx
+      ansible.builtin.apt:
+        name: python3-certbot-nginx
+    - name: Adding nginx conf
+      ansible.builtin.template:
+        src: ./config/nginx.conf.j2
+        dest: /etc/nginx/sites-enabled/default
+    - name: Allow 80
+      community.general.ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+    - name: Enable Nginx
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
+        name: nginx
+    - name: Create letsencrypt certificate
+      ansible.builtin.shell:
+        cmd: letsencrypt --non-interactive --nginx --redirect -m contact@dereknelson.io --agree-tos -d lostcities.app -d www.lostcities.app
+
+
