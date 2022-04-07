@@ -10,6 +10,11 @@ terraform {
       version = "~> 2.0"
     }
 
+    namecheap = {
+      source = "namecheap/namecheap"
+      version = ">= 2.0.0"
+    }
+
   }
 }
 
@@ -51,10 +56,13 @@ provider "digitalocean" {
   token = data.vault_generic_secret.vault_secrets.data["digitalocean_key"]
 }
 
-data "digitalocean_ssh_key" "default" {
-  name = "lostcities"
+provider "namecheap" {
+  user_name = data.vault_generic_secret.vault_secrets.data["namecheap_user_name"]
+  api_user = data.vault_generic_secret.vault_secrets.data["namecheap_api_user"]
+  api_key = data.vault_generic_secret.vault_secrets.data["namecheap_api_key"]
+  use_sandbox = false
 }
 
-module "lostcities_host" {
-  source = "../terraform_modules/host"
+data "digitalocean_ssh_key" "default" {
+  name = "lostcities"
 }

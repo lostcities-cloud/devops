@@ -15,14 +15,14 @@
       ansible.builtin.apt:
         name: python3-certbot-nginx
     - name: Adding nginx conf
-      ansible.builtin.template:
-        src: ./config/nginx.conf.j2
+      ansible.builtin.copy:
+        src: ./config/nginx.conf
         dest: /etc/nginx/sites-enabled/default
-    - name: Allow 80
+    - name: Allow Nginx
       community.general.ufw:
         rule: allow
-        port: '80'
-        proto: tcp
+        port: 443
+        state: enabled
     - name: Enable Nginx
       ansible.builtin.systemd:
         state: restarted

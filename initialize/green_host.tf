@@ -45,4 +45,3 @@ resource "digitalocean_droplet" "green_host_droplet" {
     ]
   }
 }
-

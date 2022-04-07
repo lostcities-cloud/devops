@@ -44,4 +44,3 @@ resource "digitalocean_droplet" "red_host_droplet" {
     ]
   }
 }
-
