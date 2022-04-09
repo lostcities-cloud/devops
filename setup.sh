@@ -13,7 +13,7 @@ while [[ $# -gt 0 ]]; do
       cd ./initialize || exit;
       terraform destroy -var="domain=${DOMAIN}" -auto-approve
       cd ..;
-      shift # past value
+      shift
       ;;
     -*)
       echo "Unknown option $1"
@@ -46,7 +46,7 @@ function ansible_retry() {
   n=0
   until [ "$n" -ge $retries ]
   do
-    ansible-playbook "$1" -i ./inventory.ini && break
+    ansible-playbook "${@: 1}" -i ./inventory.ini && break
     n=$((n+1))
   done
 }

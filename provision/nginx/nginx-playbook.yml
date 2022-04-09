@@ -29,29 +29,34 @@
       ansible.builtin.file:
         src: /mnt/lostcities_blue_volume/etc/letsencrypt
         dest: /etc/letsencrypt
-        owner: foo
-        group: foo
+        owner: root
+        group: root
         state: link
 
     - name: Install Apt Dependencies
       ansible.builtin.apt:
         name: nginx
+
     - name: install letsencrypt
       ansible.builtin.apt:
         name: letsencrypt
+
     - name: install certbot-nginx
       ansible.builtin.apt:
         name: python3-certbot-nginx
+
     - name: Adding nginx conf
       ansible.builtin.template:
         src: ./nginx.conf.j2
         dest: /etc/nginx/sites-enabled/default
+
     - name: Allow Nginx
       community.general.ufw:
         state: disabled
         #rule: allow
         #port: 443
         #state: enabled
+
     - name: Enable Nginx
       ansible.builtin.systemd:
         state: restarted
