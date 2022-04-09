@@ -1,9 +1,13 @@
+data "digitalocean_volume" "blue_volume" {
+  name = "lostcities-blue-volume"
+}
+
 resource "digitalocean_droplet" "blue_host_droplet" {
   name   = "lostcities-blue"
   image  = "docker-18-04"
   region = "nyc1"
   size   = "s-1vcpu-1gb"
-  //user_data = file("setup.sh")
+  volume_ids = [data.digitalocean_volume.blue_volume.id]
 
   tags = ["blue"]
 

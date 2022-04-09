@@ -14,6 +14,9 @@
         - /var/lib/dpkg/lock-frontend
         - /var/lib/apt/lists/lock
         - /var/lib/dpkg/lock
+    - name: Fix dpkg
+      ansible.builtin.shell:
+        cmd: dpkg --configure -a
     - name: Adding Gcreds
       ansible.builtin.copy:
         src: ~/gcreds.json
@@ -31,6 +34,13 @@
         rule: allow
         port: '8080'
         proto: tcp
+    - name: Prune everything
+      community.docker.docker_prune:
+        containers: yes
+        images: yes
+        networks: yes
+        volumes: yes
+        builder_cache: yes
     - name: Application Container
       community.docker.docker_container:
         name: "{{app_name}}"

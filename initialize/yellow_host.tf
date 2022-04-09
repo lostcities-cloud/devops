@@ -29,6 +29,18 @@ resource "digitalocean_droplet" "yellow_host_droplet" {
       "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
       "apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
       "apt-get update && sudo apt-get install nomad consul",
+      //"systemctl enable consul",
+      //"systemctl enable nomad",
+      //"cat > /etc/consul.d/consul.hcl <<EOL",
+      //"datacenter = \"digitalocean\"",
+      //"data_dir = \"/opt/consul/\"",
+      //"client_addr = \"0.0.0.0\"",
+      //"server = true",
+      //"bind_addr = \"0.0.0.0\" # Listen on all IPv4",
+      //"advertise_addr = \"127.0.0.1\"",
+      //"EOL",
+      //"systemctl start consul",
+      //"consul join -wan consul.lostcities.app",
     ]
   }
 }

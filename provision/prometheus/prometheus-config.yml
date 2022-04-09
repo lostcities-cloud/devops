@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 30s
+
+scrape_configs:
+  - job_name: gamestate-observability
+    honor_labels: true
+    metrics_path: /api/gamestate/actuator/prometheus
+    static_configs:
+      - targets: [ "lostcities.app"]
+
+  - job_name: accounts-observability
+    honor_labels: true
+    metrics_path: /api/accounts/actuator/prometheus
+    static_configs:
+      - targets: [ "lostcities.app" ]
+
+  - job_name: matches-observability
+    honor_labels: true
+    metrics_path: /api/matches/actuator/prometheus
+    static_configs:
+      - targets: [ "lostcities.app" ]
+
+  - job_name: player-events-observability
+    honor_labels: true
+    metrics_path: /api/player-events/actuator/prometheus
+    static_configs:
+      - targets: [ "lostcities.app" ]

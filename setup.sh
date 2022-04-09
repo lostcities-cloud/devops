@@ -1,34 +1,61 @@
 export ANSIBLE_HOST_KEY_CHECKING=false
 
-mkdir -p "./build"
+DOMAIN="lostcities.dev"
 
-retries=5
-parse_args() {
-    case "$1" in
-        -rebuild)
-            terraform destroy -auto-approve
-            ;;
-    esac
-}
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -n|-domain)
+      DOMAIN="$2"
+      shift; shift;
+      ;;
+    -d|-destroy)
+      echo "Destroying..."
+      cd ./initialize || exit;
+      terraform destroy -var="domain=${DOMAIN}" -auto-approve
+      cd ..;
+      shift # past value
+      ;;
+    -*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
 
-function apply_terraform(){
+echo "Deploying to host ${DOMAIN}"
+
+function terraform_retry(){
   cd ./initialize || exit;
 
+  retries=5
   n=0
   until [ "$n" -ge $retries ]
   do
-     terraform apply -auto-approve && break
+     terraform apply -var="domain=${DOMAIN}" -auto-approve && break
      n=$((n+1))
   done
   cd ..
 }
 
-function apply_ansible() {
-  ansible-playbook ./provision/base-configure.yml -i ./build/inventory.ini
-  ansible-playbook ./provision/frontend-configure.yml -i ./build/inventory.ini
-  ansible-playbook ./provision/nginx.yml -i ./build/inventory.ini
+function ansible_retry() {
+  retries=5
+  n=0
+  until [ "$n" -ge $retries ]
+  do
+    ansible-playbook "$1" -i ./inventory.ini && break
+    n=$((n+1))
+  done
 }
 
-apply_terraform
-node tfstate.js ./initialize/terraform.tfstate > ./build/inventory.ini
-apply_ansible
+terraform_retry
+
+node tfstate.js ./initialize/terraform.tfstate > ./inventory.ini
+
+ansible_retry ./provision/base-configure.yml
+ansible_retry ./provision/frontend-playbook.yml
+ansible_retry ./provision/nginx/nginx-playbook.yml --extra-vars "domain=${DOMAIN}"
+ansible_retry ./provision/prometheus/prometheus-playbook.yml

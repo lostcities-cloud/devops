@@ -1,5 +1,5 @@
 .tfstate
-inventory.ini
 *.tfstate*
 .terraform.lock*
 build/
+inventory.ini

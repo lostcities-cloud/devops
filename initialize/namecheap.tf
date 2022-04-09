@@ -1,5 +1,9 @@
+variable "domain" {
+  type = string
+}
+
 resource "namecheap_domain_records" "lostcities-app-domain" {
-  domain = "lostcities.app"
+  domain = "lostcities.dev"
   mode = "OVERWRITE"
 
   record {

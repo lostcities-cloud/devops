@@ -1,0 +1,65 @@
+---
+- name: Setting up nginx
+  user: root
+  hosts: nginx
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Ensure shared mount exists
+      ansible.builtin.file:
+        path: /mnt/lostcities_blue_volume
+        state: directory
+        mode: '0755'
+
+    - name: Mount blue volume
+      ansible.posix.mount:
+        path: /mnt/lostcities_blue_volume
+        src: /dev/disk/by-id/scsi-0DO_Volume_lostcities-blue-volume
+        fstype: ext4
+        opts: defaults,nofail,discard
+        state: mounted
+
+    - name: Ensure mounted etc letsencrypt exists
+      ansible.builtin.file:
+        path: /mnt/lostcities_blue_volume/etc/letsencrypt
+        state: directory
+        mode: '0755'
+
+    - name: Link volume for letsencrypt
+      ansible.builtin.file:
+        src: /mnt/lostcities_blue_volume/etc/letsencrypt
+        dest: /etc/letsencrypt
+        owner: foo
+        group: foo
+        state: link
+
+    - name: Install Apt Dependencies
+      ansible.builtin.apt:
+        name: nginx
+    - name: install letsencrypt
+      ansible.builtin.apt:
+        name: letsencrypt
+    - name: install certbot-nginx
+      ansible.builtin.apt:
+        name: python3-certbot-nginx
+    - name: Adding nginx conf
+      ansible.builtin.template:
+        src: ./nginx.conf.j2
+        dest: /etc/nginx/sites-enabled/default
+    - name: Allow Nginx
+      community.general.ufw:
+        state: disabled
+        #rule: allow
+        #port: 443
+        #state: enabled
+    - name: Enable Nginx
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
+        name: nginx
+
+    - name: Create letsencrypt certificate
+      ansible.builtin.shell:
+        cmd: echo test #letsencrypt --non-interactive --nginx --redirect -m contact@dereknelson.io --agree-tos -d {{domain}} -d www.{{domain}}
+

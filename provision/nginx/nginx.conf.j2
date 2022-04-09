@@ -1,13 +1,19 @@
 server {
 
-    server_name lostcities.app www.lostcities.app;
+    server_name {{domain} www.{{domain};
     listen 80 default_server;
     listen [::]:80 default_server;
 
+    root  /opt/lostcities/frontend/;
 
+    include /etc/nginx/mime.types;
 
     location / {
-        proxy_pass "http://green.lostcities.app:3000/";
+        try_files $uri /index.html;
+    }
+
+    location /prometheus {
+        proxy_pass "http://red.{{domain}}:9090";
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
@@ -22,7 +28,7 @@ server {
     }
 
     location /api/accounts {
-        proxy_pass "http://blue.lostcities.app:8080/api/accounts";
+        proxy_pass "http://blue.{{domain}}:8090";
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
@@ -37,7 +43,7 @@ server {
     }
 
     location /api/matches {
-        proxy_pass "http://red.lostcities.app:8080/api/matches";
+        proxy_pass "http://red.{{domain}}:8091";
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
@@ -52,7 +58,7 @@ server {
     }
 
     location /api/gamestate {
-        proxy_pass "http://yellow.lostcities.app:8080/api/gamestate";
+        proxy_pass "http://yellow.{{domain}}:8092";
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
@@ -67,7 +73,7 @@ server {
     }
 
     location /api/player-events {
-        proxy_pass "http://green.lostcities.app:8080/api/player-events";
+        proxy_pass "http://green.{{domain}}:8093";
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
