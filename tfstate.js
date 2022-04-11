@@ -5,18 +5,22 @@ const machines = ['[nginx]', null, '[nginx:vars]']
 let config = {
     'blue:vars': {
         app_name: 'lostcities-accounts',
+        port: '8090',
         app_version: 'latest'
     },
     'red:vars':  {
         app_name: 'lostcities-matches',
+        port: '8091',
         app_version: 'latest'
     },
     'yellow:vars': {
         app_name: 'lostcities-gamestate',
+        port: '8092',
         app_version: 'latest'
     },
     'green:vars': {
         app_name: 'lostcities-player-events',
+        port: '8093',
         app_version: 'latest'
     }
 }

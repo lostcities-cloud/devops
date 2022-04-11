@@ -29,10 +29,10 @@
       pip:
         name: docker
         executable: pip3
-    - name: Allow 8080
+    - name: Allow service port
       community.general.ufw:
         rule: allow
-        port: '8080'
+        port: "{{port}}"
         proto: tcp
     - name: Prune everything
       community.docker.docker_prune:
@@ -47,8 +47,9 @@
         image: "ghcr.io/lostcities-cloud/{{app_name}}:{{app_version}}"
         state: started
         pull: yes
+        restart: yes
         ports:
-          - "8080:8080"
+          - "{{port}}:{{port}}"
         volumes:
           - /root/.gcreds:/home/cnb/.gcreds
         memory: '750M'

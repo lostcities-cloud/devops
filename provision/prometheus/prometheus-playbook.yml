@@ -29,7 +29,6 @@
         volumes:
           - /opt/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
         state: started
-        pull: yes
         ports:
           - "9090"
         memory: '100M'

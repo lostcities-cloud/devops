@@ -66,5 +66,5 @@
 
     - name: Create letsencrypt certificate
       ansible.builtin.shell:
-        cmd: echo test #letsencrypt --non-interactive --nginx --redirect -m contact@dereknelson.io --agree-tos -d {{domain}} -d www.{{domain}}
+        cmd: letsencrypt --non-interactive --nginx --redirect -m contact@dereknelson.io --agree-tos -d {{domain}} -d www.{{domain}}
 
