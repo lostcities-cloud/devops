@@ -1,4 +1,5 @@
 variable "domain" {
+  default = "lostcities.dev"
   type = string
 }
 
