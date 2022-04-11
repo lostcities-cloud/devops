@@ -15,6 +15,12 @@ while [[ $# -gt 0 ]]; do
       cd ..;
       shift
       ;;
+    -nuke)
+      echo "Destroying..."
+      cd ./initialize || exit;
+      terraform destroy -var="domain=${DOMAIN}" -auto-approve
+      exit;
+      ;;
     -*)
       echo "Unknown option $1"
       exit 1
