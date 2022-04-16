@@ -66,3 +66,8 @@ provider "namecheap" {
 data "digitalocean_ssh_key" "default" {
   name = "lostcities"
 }
+
+data "digitalocean_ssh_key" "jenkins_key" {
+  name = "jenkins"
+}
+

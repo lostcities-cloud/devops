@@ -1,0 +1,54 @@
+---
+- name: Setting up application service
+  user: root
+  hosts: red, blue, green
+  - name: Allow 8301
+    community.general.ufw:
+      rule: allow
+      port: '8301'
+      proto: tcp
+  - name: Allow 8300
+    community.general.ufw:
+      rule: allow
+      port: '8300'
+      proto: tcp
+  - name: Allow 8500
+    community.general.ufw:
+      rule: allow
+      port: '8500'
+      proto: tcp
+  - name: Allow 8502 tcp
+    community.general.ufw:
+      rule: allow
+      port: '8502'
+      proto: tcp
+  - name: Allow 8502 udp
+    community.general.ufw:
+      rule: allow
+      port: '8502'
+      proto: udp
+  - name: Allow 4647
+    community.general.ufw:
+      rule: allow
+      port: '4647'
+      proto: tcp
+  - name: Allow 8600 udp
+    community.general.ufw:
+      rule: allow
+      port: '8600'
+      proto: udp
+  - name: Allow 8600 tcp
+    community.general.ufw:
+      rule: allow
+      port: '8600'
+      proto: tcp
+  - name: Allow 8302 udp
+    community.general.ufw:
+      rule: allow
+      port: '8302'
+      proto: udp
+  - name: Allow 8302 tcp
+    community.general.ufw:
+      rule: allow
+      port: '8302'
+      proto: tcp

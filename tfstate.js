@@ -6,22 +6,35 @@ let config = {
     'blue:vars': {
         app_name: 'lostcities-accounts',
         port: '8090',
-        app_version: 'latest'
+        app_version: 'latest',
+        host: 'blue.lostcities.dev',
+        nomad_join: 'red.lostcities.dev',
+        box: 'blue'
+
     },
     'red:vars':  {
         app_name: 'lostcities-matches',
         port: '8091',
-        app_version: 'latest'
+        app_version: 'latest',
+        host: 'red.lostcities.dev',
+        nomad_join: 'blue.lostcities.dev',
+        box: 'red'
     },
     'yellow:vars': {
         app_name: 'lostcities-gamestate',
         port: '8092',
-        app_version: 'latest'
+        app_version: 'latest',
+        host: 'yellow.lostcities.dev',
+        nomad_join: 'blue.lostcities.dev',
+        box: 'yellow'
     },
     'green:vars': {
         app_name: 'lostcities-player-events',
         port: '8093',
-        app_version: 'latest'
+        app_version: 'latest',
+        host: 'green.lostcities.dev',
+        nomad_join: 'blue.lostcities.dev',
+        box: 'green'
     }
 }
 
@@ -49,6 +62,7 @@ try {
                 service.ipv4_address,
                 '',
                 `[${service.name}:vars]`,
+                `ipv4_address=${service.ipv4_address}`,
                 ...Object.keys(vars).map(key => `${key}=${vars[key]}`)
             ].join('\n')
         })).flat()

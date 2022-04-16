@@ -1,0 +1,31 @@
+---
+- name: Setting up consul
+  user: root
+  hosts: red, blue, green
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Stop nomad
+      ansible.builtin.systemd:
+        state: stopped
+        name: nomad
+    - name: Stop consul
+      ansible.builtin.systemd:
+        state: stopped
+        name: consul
+    - name: Remove raft
+      ansible.builtin.file:
+        path: "/opt/consul/raft/raft.db"
+        state: absent
+    - name: Adding consul service
+      ansible.builtin.copy:
+        src: ./consul.service
+        dest: /etc/systemd/system/consul.service
+    - name: Adding consul config
+      ansible.builtin.template:
+        src: ./consul.hcl
+        dest: /etc/consul.d/consul.hcl
+    - name: Start consul
+      ansible.builtin.systemd:
+        state: started
+        name: consul

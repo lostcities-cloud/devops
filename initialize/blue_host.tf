@@ -13,7 +13,8 @@ resource "digitalocean_droplet" "blue_host_droplet" {
 
 
   ssh_keys = [
-    data.digitalocean_ssh_key.default.id
+    data.digitalocean_ssh_key.default.id,
+    data.digitalocean_ssh_key.jenkins_key.id
   ]
 
   connection {

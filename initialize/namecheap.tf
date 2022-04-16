@@ -36,10 +36,4 @@ resource "namecheap_domain_records" "lostcities-app-domain" {
     type = "A"
     address = digitalocean_droplet.red_host_droplet.ipv4_address
   }
-
-  record {
-    hostname = "yellow"
-    type = "A"
-    address = digitalocean_droplet.yellow_host_droplet.ipv4_address
-  }
 }

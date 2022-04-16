@@ -8,7 +8,8 @@ resource "digitalocean_droplet" "red_host_droplet" {
   tags = ["red"]
 
   ssh_keys = [
-    data.digitalocean_ssh_key.default.id
+    data.digitalocean_ssh_key.default.id,
+    data.digitalocean_ssh_key.jenkins_key.id
   ]
 
   connection {

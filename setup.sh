@@ -63,5 +63,8 @@ node tfstate.js ./initialize/terraform.tfstate > ./inventory.ini
 
 ansible_retry ./provision/base-configure.yml
 ansible_retry ./provision/frontend-playbook.yml
+
+ansible_retry ./provision/consul/consul-client.yml
+ansible_retry ./provision/nomad/nomad-client.yml
 ansible_retry ./provision/nginx/nginx-playbook.yml --extra-vars "domain=${DOMAIN}"
 ansible_retry ./provision/prometheus/prometheus-playbook.yml

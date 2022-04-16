@@ -1,0 +1,63 @@
+---
+- name: Setting up nomad
+  user: root
+  hosts: red, blue, green
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Stop nomad
+      ansible.builtin.systemd:
+        state: stopped
+        name: nomad
+    - name:
+      ansible.builtin.shell: |
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+        apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    - name: Install Apt Dependencies
+      ansible.builtin.apt:
+        name: nomad
+        update_cache: true
+    - name: Add nomad user
+      ansible.builtin.user:
+        name: nomad
+        home: /etc/nomad.d
+        system: yes
+        shell: /bin/false
+        append: yes
+        groups: docker
+    - name:
+      ansible.builtin.shell: |
+        mkdir -p /opt/nomad
+        chown nomad -R /opt/nomad/
+    - name: Adding nomad service
+      ansible.builtin.copy:
+        src: ./nomad.service
+        dest: /etc/systemd/system/nomad.service
+    - name: Adding nomad config
+      ansible.builtin.template:
+        src: ./nomad.hcl
+        dest: /etc/nomad.d/nomad.hcl
+    - name: Allow 4646
+      community.general.ufw:
+        rule: allow
+        port: '4646'
+        proto: tcp
+    - name: Allow 4647
+      community.general.ufw:
+        rule: allow
+        port: '4647'
+        proto: tcp
+    - name: Allow 4648 udp
+      community.general.ufw:
+        rule: allow
+        port: '4648'
+        proto: udp
+    - name: Allow 4648 tcp
+      community.general.ufw:
+        rule: allow
+        port: '4648'
+        proto: tcp
+    - name: Start nomad
+      ansible.builtin.systemd:
+        state: started
+        name: nomad

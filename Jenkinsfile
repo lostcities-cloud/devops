@@ -6,6 +6,5 @@ pipeline {
         sh 'echo Ok'
       }
     }
-
   }
 }

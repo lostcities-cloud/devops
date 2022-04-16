@@ -1,7 +1,7 @@
 ---
 - name: Setting up application service
   user: root
-  hosts: red, yellow, blue, green
+  hosts: red, blue, green
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
@@ -20,7 +20,10 @@
     - name: Adding Gcreds
       ansible.builtin.copy:
         src: ~/gcreds.json
-        dest: /root/.gcreds
+        dest: /usr/share/.gcreds
+        group: docker
+        owner: nomad
+
     - name: Install Apt Dependencies
       ansible.builtin.apt:
         name: python3-pip
@@ -45,9 +48,8 @@
       community.docker.docker_container:
         name: "{{app_name}}"
         image: "ghcr.io/lostcities-cloud/{{app_name}}:{{app_version}}"
-        state: started
+        state: stopped
         pull: yes
-        restart: yes
         ports:
           - "{{port}}:{{port}}"
         volumes:

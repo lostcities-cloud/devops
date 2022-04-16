@@ -9,7 +9,8 @@ resource "digitalocean_droplet" "green_host_droplet" {
 
 
   ssh_keys = [
-    data.digitalocean_ssh_key.default.id
+    data.digitalocean_ssh_key.default.id,
+    data.digitalocean_ssh_key.jenkins_key.id
   ]
 
   connection {
