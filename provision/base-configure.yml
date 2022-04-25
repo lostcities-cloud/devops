@@ -24,39 +24,3 @@
         group: docker
         owner: nomad
 
-    - name: Install Apt Dependencies
-      ansible.builtin.apt:
-        name: python3-pip
-        update_cache: true
-    - name: Install Pip 3 Dependencies
-      pip:
-        name: docker
-        executable: pip3
-    - name: Allow service port
-      community.general.ufw:
-        rule: allow
-        port: "{{port}}"
-        proto: tcp
-    - name: Prune everything
-      community.docker.docker_prune:
-        containers: yes
-        images: yes
-        networks: yes
-        volumes: yes
-        builder_cache: yes
-    - name: Application Container
-      community.docker.docker_container:
-        name: "{{app_name}}"
-        image: "ghcr.io/lostcities-cloud/{{app_name}}:{{app_version}}"
-        state: stopped
-        pull: yes
-        ports:
-          - "{{port}}:{{port}}"
-        volumes:
-          - /root/.gcreds:/home/cnb/.gcreds
-        memory: '750M'
-        env:
-          SECRET_MANAGER: "true"
-          SPRING_PROFILES_ACTIVE: stage
-          GOOGLE_APPLICATION_CREDENTIALS: /home/cnb/.gcreds
-

@@ -1,0 +1,11 @@
+---
+- name: Setting up consul
+  user: root
+  hosts: blue
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+  - name: Join Consul
+    ansible.builtin.shell: |
+      consul join green.lostcities.dev
+      consul join red.lostcities.dev

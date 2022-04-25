@@ -2,6 +2,7 @@
 - name: Setting up application service
   user: root
   hosts: red, blue, green
+  tasks:
   - name: Allow 8301
     community.general.ufw:
       rule: allow

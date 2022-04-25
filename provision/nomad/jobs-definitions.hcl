@@ -31,7 +31,7 @@ job "accounts" {
 
       resources {
         cpu    = 500
-        memory = 450
+        memory = 500
       }
 
       config {
@@ -77,7 +77,7 @@ job "matches" {
       }
 
       resources {
-        cpu    = 500
+        cpu    = 450
         memory = 450
       }
 
@@ -124,7 +124,7 @@ job "gamestate" {
 
       resources {
         cpu    = 500
-        memory = 450
+        memory = 500
       }
 
       config {
@@ -240,9 +240,6 @@ job "nginx" {
       name = "nginx"
       port = "http"
     }
-
-
-
 
     task "nginx" {
       driver = "docker"

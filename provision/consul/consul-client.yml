@@ -13,10 +13,10 @@
       ansible.builtin.systemd:
         state: stopped
         name: consul
-    - name: Remove raft
-      ansible.builtin.file:
-        path: "/opt/consul/raft/raft.db"
-        state: absent
+    #- name: Remove raft
+    #  ansible.builtin.file:
+    #    path: "/opt/consul/raft/raft.db"
+    #    state: absent
     - name: Adding consul service
       ansible.builtin.copy:
         src: ./consul.service
