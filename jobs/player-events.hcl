@@ -31,7 +31,7 @@ job "player-events" {
 
       resources {
         cpu    = 500
-        memory = 450
+        memory = 500
       }
 
       config {

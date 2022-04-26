@@ -1,0 +1,14 @@
+---
+- name: Setting up application service
+  user: root
+  hosts: red, blue, green
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Adding docker socket
+      ansible.builtin.file:
+        path: /var/run/docker.sock
+        state: touch
+        group: docker
+        mode: '0664'
+

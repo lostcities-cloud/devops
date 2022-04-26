@@ -28,10 +28,10 @@ job "fabio-lb" {
 
       config {
         image = "fabiolb/fabio"
-
+        network_mode = "host"
         ports = ["ui", "http"]
         args = [
-          "-registry.consul.addr", "159.223.146.133:8500"
+          "-registry.consul.addr", "blue.lostcities.dev:8500"
         ]
 
       }

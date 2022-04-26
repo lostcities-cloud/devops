@@ -6,7 +6,7 @@ job "nginx" {
 
     network {
       port "http" {
-        static = 8080
+        static = 80
       }
     }
 
@@ -50,7 +50,7 @@ upstream fabio-lb {
 }
 
 server {
-    listen 8080;
+    listen 80;
 
     root /opt/lostcities/frontend/;
 

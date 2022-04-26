@@ -3,16 +3,49 @@
   user: root
   hosts: red, blue, green
   tasks:
-  - name: Allow 8301
+
+  - name: Allow 4646
     community.general.ufw:
       rule: allow
-      port: '8301'
+      port: '4646'
       proto: tcp
+  - name: Allow 4647
+    community.general.ufw:
+      rule: allow
+      port: '4647'
+      proto: tcp
+  - name: Allow 4648 udp
+    community.general.ufw:
+      rule: allow
+      port: '4648'
+      proto: udp
+  - name: Allow 4648 tcp
+    community.general.ufw:
+      rule: allow
+      port: '4648'
+      proto: tcp
+
   - name: Allow 8300
     community.general.ufw:
       rule: allow
       port: '8300'
       proto: tcp
+  - name: Allow 8301
+    community.general.ufw:
+      rule: allow
+      port: '8301'
+      proto: tcp
+  - name: Allow 8302 udp
+    community.general.ufw:
+      rule: allow
+      port: '8302'
+      proto: udp
+  - name: Allow 8302 tcp
+    community.general.ufw:
+      rule: allow
+      port: '8302'
+      proto: tcp
+
   - name: Allow 8500
     community.general.ufw:
       rule: allow
@@ -28,11 +61,7 @@
       rule: allow
       port: '8502'
       proto: udp
-  - name: Allow 4647
-    community.general.ufw:
-      rule: allow
-      port: '4647'
-      proto: tcp
+
   - name: Allow 8600 udp
     community.general.ufw:
       rule: allow
@@ -42,14 +71,4 @@
     community.general.ufw:
       rule: allow
       port: '8600'
-      proto: tcp
-  - name: Allow 8302 udp
-    community.general.ufw:
-      rule: allow
-      port: '8302'
-      proto: udp
-  - name: Allow 8302 tcp
-    community.general.ufw:
-      rule: allow
-      port: '8302'
       proto: tcp

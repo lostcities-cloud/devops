@@ -7,5 +7,5 @@
   tasks:
   - name: Join Consul
     ansible.builtin.shell: |
-      consul join green.lostcities.dev
-      consul join red.lostcities.dev
+      consul join green.{{domain}}
+      consul join red.{{domain}}

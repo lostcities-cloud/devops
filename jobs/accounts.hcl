@@ -30,7 +30,7 @@ job "accounts" {
       }
 
       resources {
-        cpu    = 100
+        cpu    = 500
         memory = 500
       }
 

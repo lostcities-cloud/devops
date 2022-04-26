@@ -27,15 +27,12 @@ resource "digitalocean_droplet" "blue_host_droplet" {
 
   provisioner "remote-exec" {
     inline = [
-      "sleep 20;",
+      "sleep 10;",
       "systemctl disable apt-daily.timer",
       "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "kill $(ps aux | grep '/usr/lib/apt/apt.systemd.daily' | awk '{print $2}')  || true",
       "systemctl disable --now apt-daily.timer",
       "rm /var/lib/dpkg/lock /var/lib/dpkg/lock-frontend",
-      "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
-      "apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
-      "apt-get update && sudo apt-get install nomad consul",
     ]
   }
 }

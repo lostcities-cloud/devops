@@ -52,7 +52,7 @@ function ansible_retry() {
   n=0
   until [ "$n" -ge $retries ]
   do
-    ansible-playbook "${@: 1}" -i ./inventory.ini && break
+    ansible-playbook "${@: 1}" -i ./inventory.ini --extra-vars "domain=${DOMAIN}"  && break
     n=$((n+1))
   done
 }
@@ -63,9 +63,15 @@ node tfstate.js ./initialize/terraform.tfstate > ./inventory.ini
 
 ansible_retry ./provision/base-configure.yml
 ansible_retry ./provision/frontend-playbook.yml
+
+ansible_retry ./provision/docker/docker-playbook.yml
+
 ansible_retry ./provision/consul/consul-install.yml
 ansible_retry ./provision/consul/consul-client.yml
+ansible_retry ./provision/consul/consul-join.yml
+
 ansible_retry ./provision/nomad/nomad-ports.yml
 ansible_retry ./provision/nomad/nomad-client.yml
+
 # ansible_retry ./provision/nginx/nginx-playbook.yml --extra-vars "domain=${DOMAIN}"
 # ansible_retry ./provision/prometheus/prometheus-playbook.yml

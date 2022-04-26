@@ -9,16 +9,10 @@
       ansible.builtin.systemd:
         state: stopped
         name: nomad
-    - name:
-      ansible.builtin.shell: |
-        curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-        apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-        mkdir -p /var/run/docker.sock
-        chown nomad /var/run/docker.sock
     - name: Install Apt Dependencies
       ansible.builtin.apt:
         name: nomad
-        update_cache: true
+        update_cache: false
     - name: Add nomad user
       ansible.builtin.user:
         name: nomad
@@ -27,10 +21,12 @@
         shell: /bin/false
         append: yes
         groups: docker
-    - name:
-      ansible.builtin.shell: |
-        mkdir -p /opt/nomad
-        chown nomad -R /opt/nomad/
+    - name: Adding nomad working directory
+      ansible.builtin.file:
+        path: /opt/nomad
+        state: directory
+        owner: nomad
+        mode: '0775'
     - name: Adding nomad service
       ansible.builtin.copy:
         src: ./nomad.service

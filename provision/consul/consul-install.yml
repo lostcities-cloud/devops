@@ -5,10 +5,10 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
-  - name:
-    ansible.builtin.shell: |
-      curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-      apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+  - name: Stop consul
+    ansible.builtin.systemd:
+      state: stopped
+      name: consul
   - name: Install Apt Dependencies
     ansible.builtin.apt:
       name: consul
@@ -21,7 +21,9 @@
       home: /etc/consul.d
       system: yes
       shell: /bin/false
-  - name:
-    ansible.builtin.shell: |
-      mkdir -p /opt/consul
-      chown consul -R /opt/consul/
+  - name: Adding consul working directory
+    ansible.builtin.file:
+      path: /opt/consul
+      state: directory
+      owner: consul
+      mode: '0755'
