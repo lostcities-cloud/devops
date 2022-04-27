@@ -29,5 +29,5 @@
         dest: /etc/consul.d/consul.hcl
     - name: Start consul
       ansible.builtin.systemd:
-        state: started
+        state: restarted
         name: consul

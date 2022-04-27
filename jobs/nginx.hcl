@@ -11,22 +11,14 @@ job "nginx" {
 
     network {
       port "http" {
-        static = 80
-      }
-
-      port "https" {
-        static = 443
+        static = 8080
       }
     }
 
     service {
       name = "nginx"
+      tags = ["default", "urlprefix-lostcities.dev/", "urlprefix-www.lostcities.dev/", "urlprefix-/ui"]
       port = "http"
-    }
-
-    service {
-      name = "nginx-secure"
-      port = "https"
     }
 
     task "nginx" {
@@ -40,12 +32,11 @@ job "nginx" {
       config {
         image = "nginx"
 
-        ports = ["http", "https"]
+        ports = ["http"]
 
         volumes = [
-          //"local:/etc/nginx/conf.d",
+          "local:/etc/nginx/conf.d",
           "local/frontend/package:/opt/lostcities/frontend",
-          "local/certs:/etc/nginx/certs"
         ]
       }
 
@@ -56,31 +47,15 @@ job "nginx" {
 
       template {
         data = <<EOF
-upstream fabio-lb {
-{{ range service "fabio-lb" }}
-  server {{ .Address }}:{{ .Port }};
-{{ else }}
-  server 127.0.0.1:65535; # force a 502
-{{ end }}
-}
-
 server {
-    listen 443 ssl;
-    listen 80;
+    listen 8080;
 
-    ssl_certificate /etc/nginx/certs/server.crt;
-    ssl_certificate_key /etc/nginx/certs/server.key;
-
-    root /opt/lostcities/frontend/;
+    root  /local/frontend/package/;
 
     include /etc/nginx/mime.types;
 
     location / {
         try_files $uri /index.html;
-    }
-
-    location /api {
-        proxy_pass http://fabio-lb;
     }
 }
 EOF

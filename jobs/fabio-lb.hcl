@@ -21,10 +21,17 @@ job "fabio-lb" {
     service {
       name = "fabio-lb-ui"
       port = "ui"
+
+      check {
+        type = "http"
+        path = "/health"
+        interval = "30s"
+        timeout  = "2s"
+      }
     }
 
     service {
-      name = "fabio-lb-proxy"
+      name = "fabio-lb"
       port = "http"
     }
 
@@ -40,7 +47,7 @@ job "fabio-lb" {
         image = "fabiolb/fabio"
         ports = ["ui", "http"]
         args = [
-          "-registry.consul.addr", "157.230.176.42:8500"
+          "-registry.consul.addr", "red.lostcities.dev:8500"
         ]
       }
     }

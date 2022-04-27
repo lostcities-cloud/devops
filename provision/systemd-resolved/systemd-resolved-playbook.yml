@@ -7,26 +7,26 @@
   tasks:
     - name: Copy resolved consul configuration
       ansible.builtin.copy:
-        src: ./consul.conf
-        dest: /etc/systemd/resolved.conf.d/consul.conf
+        src: ./resolv.conf
+        dest: /etc/resolv.conf
 
-    - name: Configure IPTables for DNS
-      ansible.builtin.shell: |
-        iptables --table nat --append OUTPUT --destination localhost --protocol udp --match udp --dport 53 --jump REDIRECT --to-ports 8600
-        iptables --table nat --append OUTPUT --destination localhost --protocol tcp --match tcp --dport 53 --jump REDIRECT --to-ports 8600
+    #- name: Configure IPTables for DNS
+    #  ansible.builtin.shell: |
+    #    iptables --table nat --append OUTPUT --destination localhost --protocol udp --match udp --dport 53 --jump REDIRECT --to-ports 8600
+    #    iptables --table nat --append OUTPUT --destination localhost --protocol tcp --match tcp --dport 53 --jump REDIRECT --to-ports 8600
 
     - name: Restart systemd-resolved
       ansible.builtin.systemd:
-        state: restarted
+        state: stopped
         name: systemd-resolved
 
-    - name: Allow 53 udp
-      community.general.ufw:
-        rule: allow
-        port: '53'
-        proto: udp
-    - name: Allow 53 tcp
-      community.general.ufw:
-        rule: allow
-        port: '53'
-        proto: tcp
+    #- name: Allow 53 udp
+    #  community.general.ufw:
+    #    rule: allow
+    #    port: '53'
+    #    proto: udp
+    #- name: Allow 53 tcp
+    #  community.general.ufw:
+    #    rule: allow
+    #    port: '53'
+    #    proto: tcp

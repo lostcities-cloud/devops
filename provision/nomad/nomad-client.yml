@@ -68,5 +68,5 @@
         proto: tcp
     - name: Start nomad
       ansible.builtin.systemd:
-        state: started
+        state: restarted
         name: nomad

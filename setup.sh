@@ -63,8 +63,8 @@ terraform_retry
 
 node tfstate.js ./initialize/terraform.tfstate > ./inventory.ini
 
-#ansible_retry ./provision/full-provision-playbook.yml
-ansible_retry ./provision/systemd-resolved/systemd-resolved-playbook.yml
+ansible_retry ./provision/full-provision-playbook.yml
+
 #ansible_retry ./provision/frontend-playbook.yml
 #
 #ansible_retry ./provision/docker/docker-playbook.yml

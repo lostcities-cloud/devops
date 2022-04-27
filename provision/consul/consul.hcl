@@ -15,6 +15,12 @@ performance {
   raft_multiplier = 1
 }
 
+domain = "{{ domain }}"
+recursors = [
+  "dns1.registrar-servers.com",
+  "dns2.registrar-servers.com"
+]
+
 {% if box == 'blue' %}
 bootstrap_expect = 3
 

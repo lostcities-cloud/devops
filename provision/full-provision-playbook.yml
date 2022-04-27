@@ -21,3 +21,6 @@
 
 - name: Consul Join
   import_playbook: ./consul/consul-join.yml
+
+- name: Resolved
+  import_playbook: ./systemd-resolved/systemd-resolved-playbook.yml
