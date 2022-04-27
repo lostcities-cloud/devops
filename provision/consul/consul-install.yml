@@ -1,20 +1,16 @@
 ---
 - name: Setting up consul
   user: root
-  hosts: red, blue, green
+  hosts: red, blue, green, yellow
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
-  - name: Stop consul
-    ansible.builtin.systemd:
-      state: stopped
-      name: consul
   - name: Install Apt Dependencies
     ansible.builtin.apt:
-      name: consul
-  - name: Install Apt Dependencies
-    ansible.builtin.apt:
-      name: consul-template
+      name: "{{ item }}"
+    with_items:
+      - consul
+      - consul-template
   - name: Add consul user
     ansible.builtin.user:
       name: consul

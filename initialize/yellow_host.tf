@@ -1,11 +1,11 @@
-resource "digitalocean_droplet" "green_host_droplet" {
-  name   = "lostcities-green"
+resource "digitalocean_droplet" "yellow_host_droplet" {
+  name   = "lostcities-yellow"
   image  = "docker-18-04"
   region = "nyc1"
   size   = "s-1vcpu-1gb"
   //user_data = file("setup.sh")
 
-  tags = ["green"]
+  tags = ["yellow"]
 
 
   ssh_keys = [

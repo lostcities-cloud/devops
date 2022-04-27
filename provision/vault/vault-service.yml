@@ -1,43 +1,45 @@
 ---
-- name: Setting up nomad
+- name: Setting up vault
   user: root
-  hosts: red, blue, green, yellow
+  hosts: red, blue, green
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
     - name: Install Apt Dependencies
       ansible.builtin.apt:
-        name: nomad
+        name: vault
         update_cache: false
-    - name: Add nomad user
+
+    - name: Add vault user
       ansible.builtin.user:
-        name: nomad
-        home: /etc/nomad.d
+        name: vault
+        home: /etc/vault.d
         system: yes
         shell: /bin/false
         append: yes
-        groups: docker
+
+    - name: Allow 8200
+      community.general.ufw:
+        rule: allow
+        port: '8200'
+        proto: tcp
+    - name: Allow 8201
+      community.general.ufw:
+        rule: allow
+        port: '8201'
+        proto: tcp
 
     - name: Adding nomad working directory
       ansible.builtin.file:
-        path: /var/opt/loki
+        path: /opt/vault
         state: directory
-        owner: nomad
+        owner: vault
         mode: '0775'
+    - name: install frontend
+      ansible.builtin.shell: |
+        export VAULT_ADDR='http://127.0.0.1:8200'
+        vault operator init
 
-    - name: Adding Gcreds
-      ansible.builtin.copy:
-        src: ~/gcreds.json
-        dest: /usr/share/.gcreds
-        group: docker
-        owner: nomad
-
-    - name: Adding nomad working directory
-      ansible.builtin.file:
-        path: /opt/nomad
-        state: directory
-        owner: nomad
-        mode: '0775'
     - name: Adding nomad service
       ansible.builtin.copy:
         src: ./nomad.service

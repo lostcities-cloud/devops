@@ -1,0 +1,12 @@
+---
+- name: Setting up nomad
+  user: root
+  hosts: red, blue, green, yellow
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Start nomad
+      ansible.builtin.systemd:
+        state: stopped
+        name: nomad
+

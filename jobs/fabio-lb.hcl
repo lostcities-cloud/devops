@@ -1,10 +1,15 @@
 job "fabio-lb" {
   datacenters = ["digital-ocean"]
 
+  constraint {
+    attribute = "${node.unique.name}"
+    value = "lostcities-red"
+  }
+
+
   group "fabio-lb" {
 
     network {
-      mode = "host"
       port "ui" {
         static = 9998
       }
@@ -14,7 +19,12 @@ job "fabio-lb" {
     }
 
     service {
-      name = "fabio-lb"
+      name = "fabio-lb-ui"
+      port = "ui"
+    }
+
+    service {
+      name = "fabio-lb-proxy"
       port = "http"
     }
 
@@ -22,18 +32,16 @@ job "fabio-lb" {
       driver = "docker"
 
       resources {
-        cpu    = 100
-        memory = 100
+        cpu    = 300
+        memory = 300
       }
 
       config {
         image = "fabiolb/fabio"
-        network_mode = "host"
         ports = ["ui", "http"]
         args = [
-          "-registry.consul.addr", "blue.lostcities.dev:8500"
+          "-registry.consul.addr", "157.230.176.42:8500"
         ]
-
       }
     }
   }

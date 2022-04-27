@@ -31,7 +31,7 @@ job "gamestate" {
 
       resources {
         cpu    = 500
-        memory = 500
+        memory = 450
       }
 
       config {

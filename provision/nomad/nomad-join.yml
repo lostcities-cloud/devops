@@ -1,10 +1,10 @@
 ---
 - name: Setting up consul
   user: root
-  hosts: local
+  hosts: red, blue, green, yellow
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
   - name: Join Consul
     ansible.builtin.shell: |
-      nomad server join blue.{{domain}}
+      nomad server join {{ blue_ipv4 }}

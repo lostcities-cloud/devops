@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const machines = ['[nginx]', null, '[nginx:vars]']
+const machines = ['[nginx]', null, '[all:vars]']
 
 let config = {
     'blue:vars': {
@@ -55,7 +55,7 @@ try {
                 machines.splice(1, 0, service.ipv4_address)
             }
 
-            machines.push(`${service.name}=${service.ipv4_address}`)
+            machines.push(`${service.name}_ipv4=${service.ipv4_address}`)
 
             return [
                 `[${service.name}]`,

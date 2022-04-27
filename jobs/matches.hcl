@@ -31,7 +31,7 @@ job "matches" {
       }
 
       resources {
-        cpu    = 450
+        cpu    = 500
         memory = 450
       }
 

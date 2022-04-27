@@ -1,41 +1,36 @@
 ---
 - name: Setting up nginx
   user: root
-  hosts: nginx
+  hosts: yellow
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
     - name: Ensure shared mount exists
       ansible.builtin.file:
-        path: /mnt/lostcities_blue_volume
+        path: /mnt/yellow_volume
         state: directory
         mode: '0755'
-
     - name: Mount blue volume
       ansible.posix.mount:
-        path: /mnt/lostcities_blue_volume
-        src: /dev/disk/by-id/scsi-0DO_Volume_lostcities-blue-volume
+        path: /mnt/yellow_volume
+        src: /dev/disk/by-id/scsi-0DO_Volume_yellow-volume
         fstype: ext4
-        opts: defaults,nofail,discard
+        opts: discard,defaults,noatime
         state: mounted
 
     - name: Ensure mounted etc letsencrypt exists
       ansible.builtin.file:
-        path: /mnt/lostcities_blue_volume/etc/letsencrypt
+        path: /mnt/lostcities_yellow/etc/letsencrypt
         state: directory
         mode: '0755'
 
     - name: Link volume for letsencrypt
       ansible.builtin.file:
-        src: /mnt/lostcities_blue_volume/etc/letsencrypt
+        src: /mnt/lostcities_yellow/etc/letsencrypt
         dest: /etc/letsencrypt
         owner: root
         group: root
         state: link
-
-    - name: Install Apt Dependencies
-      ansible.builtin.apt:
-        name: nginx
 
     - name: install letsencrypt
       ansible.builtin.apt:

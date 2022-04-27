@@ -1,12 +1,21 @@
 job "nginx" {
   datacenters = ["digital-ocean"]
 
+  constraint {
+    attribute = "${node.unique.name}"
+    value = "lostcities-yellow"
+  }
+
   group "nginx" {
     count = 1
 
     network {
       port "http" {
         static = 80
+      }
+
+      port "https" {
+        static = 443
       }
     }
 
@@ -15,22 +24,28 @@ job "nginx" {
       port = "http"
     }
 
+    service {
+      name = "nginx-secure"
+      port = "https"
+    }
+
     task "nginx" {
       driver = "docker"
 
       resources {
-        cpu    = 150
-        memory = 200
+        cpu    = 500
+        memory = 250
       }
 
       config {
         image = "nginx"
 
-        ports = ["http"]
+        ports = ["http", "https"]
 
         volumes = [
-          "local:/etc/nginx/conf.d",
-          "local/frontend:/opt/lostcities/frontend/package"
+          //"local:/etc/nginx/conf.d",
+          "local/frontend/package:/opt/lostcities/frontend",
+          "local/certs:/etc/nginx/certs"
         ]
       }
 
@@ -50,7 +65,11 @@ upstream fabio-lb {
 }
 
 server {
+    listen 443 ssl;
     listen 80;
+
+    ssl_certificate /etc/nginx/certs/server.crt;
+    ssl_certificate_key /etc/nginx/certs/server.key;
 
     root /opt/lostcities/frontend/;
 

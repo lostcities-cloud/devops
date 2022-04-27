@@ -9,14 +9,14 @@ resource "namecheap_domain_records" "lostcities-app-domain" {
 
   record {
     hostname = "@"
-    type = "A"
-    address = digitalocean_droplet.blue_host_droplet.ipv4_address
+    type = "CNAME"
+    address = digitalocean_droplet.yellow_host_droplet.ipv4_address
   }
 
   record {
     hostname = "www"
-    type = "A"
-    address = digitalocean_droplet.blue_host_droplet.ipv4_address
+    type = "CNAME"
+    address = "nginx.service.digital-ocean.consul."
   }
 
   record {
@@ -35,5 +35,11 @@ resource "namecheap_domain_records" "lostcities-app-domain" {
     hostname = "red"
     type = "A"
     address = digitalocean_droplet.red_host_droplet.ipv4_address
+  }
+
+  record {
+    hostname = "yellow"
+    type = "A"
+    address = digitalocean_droplet.yellow_host_droplet.ipv4_address
   }
 }

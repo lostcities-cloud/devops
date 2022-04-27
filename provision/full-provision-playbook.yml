@@ -1,0 +1,23 @@
+- name: Base Setup
+  import_playbook: ./base-configure.yml
+
+- name: Docker Playbook
+  import_playbook: ./docker/docker-playbook.yml
+
+- name: Consul Install
+  import_playbook: ./consul/consul-install.yml
+
+- name: Consul Client
+  import_playbook: ./consul/consul-client.yml
+
+- name: Nomad Ports
+  import_playbook: ./nomad/nomad-ports.yml
+
+- name: Nomad Client
+  import_playbook: ./nomad/nomad-client.yml
+
+- name: Join local
+  import_playbook: ./nomad-local-join-playbook.yml
+
+- name: Consul Join
+  import_playbook: ./consul/consul-join.yml

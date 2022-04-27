@@ -7,5 +7,6 @@
   tasks:
   - name: Join Consul
     ansible.builtin.shell: |
-      consul join green.{{domain}}
-      consul join red.{{domain}}
+      consul join {{ green_ipv4 }}
+      consul join {{ red_ipv4 }}
+      consul join {{ yellow_ipv4 }}

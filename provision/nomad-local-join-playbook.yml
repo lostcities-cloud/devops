@@ -1,0 +1,19 @@
+---
+- name: Join Nomad from local
+  user: root
+  hosts: localhost
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Join Red
+      ansible.builtin.shell:
+        cmd: nomad server join {{ red_ipv4 }}
+    - name: Join Blue
+      ansible.builtin.shell:
+        cmd: nomad server join {{ blue_ipv4 }}
+    - name: Join Green
+      ansible.builtin.shell:
+        cmd: nomad server join {{ green_ipv4 }}
+    - name: Join Yellow
+      ansible.builtin.shell:
+        cmd: nomad server join {{ yellow_ipv4 }}

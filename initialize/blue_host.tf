@@ -1,5 +1,5 @@
 data "digitalocean_volume" "blue_volume" {
-  name = "lostcities-blue-volume"
+  name = "blue-volume"
 }
 
 resource "digitalocean_droplet" "blue_host_droplet" {

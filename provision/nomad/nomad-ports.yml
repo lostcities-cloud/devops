@@ -1,7 +1,7 @@
 ---
-- name: Setting up application service
+- name: Allowing hashicorp ports.
   user: root
-  hosts: red, blue, green
+  hosts: red, blue, green, yellow
   tasks:
 
   - name: Allow 4646
