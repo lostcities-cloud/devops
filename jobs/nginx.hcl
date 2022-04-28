@@ -11,14 +11,23 @@ job "nginx" {
 
     network {
       port "http" {
-        static = 8080
+        static = 80
+      }
+
+      port "https" {
+        static = 443
       }
     }
 
     service {
       name = "nginx"
-      tags = ["default", "urlprefix-lostcities.dev/", "urlprefix-www.lostcities.dev/", "urlprefix-/ui"]
       port = "http"
+    }
+
+    service {
+      name = "nginx-secure"
+      tags = ["default", "urlprefix-lostcities.dev/", "urlprefix-www.lostcities.dev/", "urlprefix-/ui"]
+      port = "https"
     }
 
     task "nginx" {
@@ -32,11 +41,12 @@ job "nginx" {
       config {
         image = "nginx"
 
-        ports = ["http"]
+        ports = ["http", "https"]
 
         volumes = [
           "local:/etc/nginx/conf.d",
           "local/frontend/package:/opt/lostcities/frontend",
+          "/var/opt/nginx:/var/opt/nginx"
         ]
       }
 
@@ -47,16 +57,64 @@ job "nginx" {
 
       template {
         data = <<EOF
-server {
-    listen 8080;
+upstream fabio-lb {
+{{ range service "fabio-lb" }}
+  server {{ .Address }}:{{ .Port }};
+{{ else }}
+  server 127.0.0.1:65535; # force a 502
+{{ end }}
+}
 
+server {
     root  /local/frontend/package/;
 
     include /etc/nginx/mime.types;
 
     location / {
         try_files $uri /index.html;
+        add_header Strict-Transport-Security "max-age=1000; includeSubDomains" always;
     }
+
+    location /api {
+        proxy_pass http://fabio-lb;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_redirect off;
+        proxy_connect_timeout 90s;
+        proxy_read_timeout 90s;
+        proxy_send_timeout 90s;
+    }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /var/opt/nginx/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /var/opt/nginx/privkey.pem; # managed by Certbot
+    include /var/opt/nginx/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /var/opt/nginx/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = www.lostcities.dev) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = lostcities.dev) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+        listen 80 ;
+        listen [::]:80 ;
+    server_name www.lostcities.dev lostcities.dev;
+    return 404; # managed by Certbot
+
 }
 EOF
 

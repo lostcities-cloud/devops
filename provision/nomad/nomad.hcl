@@ -3,9 +3,9 @@ data_dir = "/opt/nomad/data"
 bind_addr = "0.0.0.0"
 
 advertise {
-  http = "{{host}}"
-  rpc  = "{{host}}"
-  serf = "{{host}}"
+  http = "{{ipv4_address}}"
+  rpc  = "{{ipv4_address}}"
+  serf = "{{ipv4_address}}"
 }
 
 server {

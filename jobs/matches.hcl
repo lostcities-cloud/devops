@@ -11,7 +11,7 @@ job "matches" {
 
     service {
       name = "matches"
-      tags = ["default", "urlprefix-/api/matches"]
+      tags = ["urlprefix-/api/matches"]
       port = "service-port"
       check {
         type = "http"

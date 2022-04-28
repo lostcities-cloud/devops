@@ -9,7 +9,7 @@ job "player-events" {
 
     service {
       name = "player-events"
-      tags = ["default", "urlprefix-/api/player-events"]
+      tags = ["urlprefix-/api/player-events"]
       port = "service-port"
 
       check {

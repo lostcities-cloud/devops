@@ -10,7 +10,7 @@ job "accounts" {
     service {
       name = "accounts"
       port = "service-port"
-      tags = ["default", "urlprefix-/api/accounts"]
+      tags = ["urlprefix-/api/accounts"]
 
       check {
         type = "http"

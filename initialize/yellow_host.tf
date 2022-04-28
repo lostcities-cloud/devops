@@ -1,3 +1,8 @@
+
+
+
+
+
 resource "digitalocean_droplet" "yellow_host_droplet" {
   name   = "lostcities-yellow"
   image  = "docker-18-04"
@@ -29,6 +34,14 @@ resource "digitalocean_droplet" "yellow_host_droplet" {
       "kill $(ps aux | grep '/usr/lib/apt/apt.systemd.daily' | awk '{print $2}')  || true",
       "systemctl disable --now apt-daily.timer",
       "rm /var/lib/dpkg/lock /var/lib/dpkg/lock-frontend",
+
+      // TODO put this in ansible with lookup: https://docs.ansible.com/ansible/2.9/plugins/lookup/hashi_vault.html
+      "cat << EOF > /var/opt/nginx/options-ssl-nginx.conf\n${data.vault_generic_secret.vault_secrets.data["options-ssl-nginx.conf"]}\n\nEOF",
+      "cat << EOF > /var/opt/nginx/fullchain.pem\n${data.vault_generic_secret.vault_secrets.data["fullchain.pem"]}\n\nEOF",
+      "cat << EOF > /var/opt/nginx/privkey.pem\n${data.vault_generic_secret.vault_secrets.data["privkey.pem"]}\n\nEOF",
+      "cat << EOF > /var/opt/nginx/ssl-dhparams.pem\n${data.vault_generic_secret.vault_secrets.data["ssl-dhparams.pem"]}\n\nEOF",
     ]
   }
 }
+
+/var/opt/nginx/

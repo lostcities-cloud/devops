@@ -9,7 +9,7 @@ job "gamestate" {
 
     service {
       name = "gamestate"
-      tags = ["default", "urlprefix-/api/gamestate"]
+      tags = ["urlprefix-/api/gamestate"]
       port = "service-port"
 
       check {
