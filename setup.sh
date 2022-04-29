@@ -3,7 +3,7 @@ export ANSIBLE_HOST_KEY_CHECKING=false
 DOMAIN="lostcities.dev"
 
 function terraform_retry(){
-  cd ./initialize || exit;
+  cd ./terraform || exit;
 
   retries=5
   n=0
@@ -34,7 +34,7 @@ while [[ $# -gt 0 ]]; do
     -d|-destroy)
       echo "Destroying..."
 
-      cd ./initialize || exit;
+      cd ./terraform || exit;
       terraform destroy -var="domain=${DOMAIN}" -auto-approve
       cd ..;
       shift
@@ -42,7 +42,7 @@ while [[ $# -gt 0 ]]; do
     -nuke)
       echo "Destroying..."
 
-      cd ./initialize || exit;
+      cd ./terraform || exit;
       terraform destroy -var="domain=${DOMAIN}" -auto-approve
       exit;
       ;;
