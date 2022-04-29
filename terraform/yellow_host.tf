@@ -43,5 +43,3 @@ resource "digitalocean_droplet" "yellow_host_droplet" {
     ]
   }
 }
-
-/var/opt/nginx/

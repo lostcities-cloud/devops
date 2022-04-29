@@ -1,5 +1,4 @@
 job "player-events" {
-
   datacenters = ["digital-ocean"]
 
   group "player-events" {
@@ -9,8 +8,8 @@ job "player-events" {
 
     service {
       name = "player-events"
-      tags = ["urlprefix-/api/player-events"]
       port = "service-port"
+      tags = ["urlprefix-/api/player-events"]
 
       check {
         type = "http"
@@ -29,8 +28,13 @@ job "player-events" {
         GOOGLE_APPLICATION_CREDENTIALS = "/home/cnb/.gcreds"
       }
 
+      logs {
+        max_files = 10
+        max_file_size = 10
+      }
+
       resources {
-        cpu    = 500
+        cpu = 500
         memory = 500
       }
 

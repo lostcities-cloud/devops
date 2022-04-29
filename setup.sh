@@ -33,7 +33,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     -d|-destroy)
       echo "Destroying..."
-      #ansible_retry ./provision/nomad/nomad-stop.yml || true
+
       cd ./initialize || exit;
       terraform destroy -var="domain=${DOMAIN}" -auto-approve
       cd ..;
@@ -41,7 +41,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     -nuke)
       echo "Destroying..."
-      #ansible_retry ./provision/nomad/nomad-stop.yml  || true
+
       cd ./initialize || exit;
       terraform destroy -var="domain=${DOMAIN}" -auto-approve
       exit;
@@ -61,22 +61,15 @@ echo "Deploying to host ${DOMAIN}"
 
 terraform_retry
 
-node tfstate.js ./initialize/terraform.tfstate > ./inventory.ini
+node tfstate.js ./terraform/terraform.tfstate > ./inventory.ini
 
-ansible_retry ./provision/full-provision-playbook.yml
+ansible_retry ./ansible/full-provision-playbook.yml
 
-#ansible_retry ./provision/frontend-playbook.yml
-#
-#ansible_retry ./provision/docker/docker-playbook.yml
-#
-#ansible_retry ./provision/consul/consul-install.yml
-#ansible_retry ./provision/consul/consul-client.yml
-#ansible_retry ./provision/consul/consul-join.yml
-#
-#ansible_retry ./provision/nomad/nomad-ports.yml
-#ansible_retry ./provision/nomad/nomad-client.yml
-
-
-
-# ansible_retry ./provision/nginx/nginx-playbook.yml --extra-vars "domain=${DOMAIN}"
-# ansible_retry ./provision/prometheus/prometheus-playbook.yml
+nomad job run ./nomad/accounts.hcl
+nomad job run ./nomad/gamestate.hcl
+nomad job run ./nomad/matches.hcl
+nomad job run ./nomad/player-events.hcl
+nomad job run ./nomad/prometheus.hcl
+nomad job run ./nomad/vector.hcl
+nomad job run ./nomad/nginx.hcl
+nomad job run ./nomad/loki.hcl

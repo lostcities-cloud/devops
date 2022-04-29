@@ -16,21 +16,25 @@ job "vector" {
       delay = "30s"
       mode = "fail"
     }
+
     network {
       port "api" {
         to = 8686
       }
     }
+
     # docker socket volume
     volume "docker-sock" {
       type = "host"
       source = "docker-sock"
       read_only = true
     }
+
     ephemeral_disk {
       size    = 500
       sticky  = true
     }
+
     task "vector" {
       driver = "docker"
       config {
@@ -50,8 +54,8 @@ job "vector" {
       }
       # resource limits are a good idea because you don't want your log collection to consume all resources available
       resources {
-        cpu    = 500 # 500 MHz
-        memory = 256 # 256MB
+        cpu    = 256 # 500 MHz
+        memory = 128 # 256MB
       }
       # template with Vector's configuration
       template {

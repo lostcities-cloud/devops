@@ -1,5 +1,4 @@
 job "accounts" {
-
   datacenters = ["digital-ocean"]
 
   group "accounts" {

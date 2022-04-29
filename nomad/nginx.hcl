@@ -57,8 +57,33 @@ job "nginx" {
 
       template {
         data = <<EOF
-upstream fabio-lb {
-{{ range service "fabio-lb" }}
+
+upstream accounts {
+{{ range service "accounts" }}
+  server {{ .Address }}:{{ .Port }};
+{{ else }}
+  server 127.0.0.1:65535; # force a 502
+{{ end }}
+}
+
+upstream gamestate {
+{{ range service "gamestate" }}
+  server {{ .Address }}:{{ .Port }};
+{{ else }}
+  server 127.0.0.1:65535; # force a 502
+{{ end }}
+}
+
+upstream player-events {
+{{ range service "player-events" }}
+  server {{ .Address }}:{{ .Port }};
+{{ else }}
+  server 127.0.0.1:65535; # force a 502
+{{ end }}
+}
+
+upstream matches {
+{{ range service "matches" }}
   server {{ .Address }}:{{ .Port }};
 {{ else }}
   server 127.0.0.1:65535; # force a 502
@@ -70,13 +95,8 @@ server {
 
     include /etc/nginx/mime.types;
 
-    location / {
-        try_files $uri /index.html;
-        add_header Strict-Transport-Security "max-age=1000; includeSubDomains" always;
-    }
-
-    location /api {
-        proxy_pass http://fabio-lb;
+    location /api/accounts {
+        proxy_pass http://accounts;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
@@ -90,13 +110,62 @@ server {
         proxy_send_timeout 90s;
     }
 
+    location /api/gamestate {
+        proxy_pass http://gamestate;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_redirect off;
+        proxy_connect_timeout 90s;
+        proxy_read_timeout 90s;
+        proxy_send_timeout 90s;
+    }
+
+    location /api/matches {
+        proxy_pass http://matches;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_redirect off;
+        proxy_connect_timeout 90s;
+        proxy_read_timeout 90s;
+        proxy_send_timeout 90s;
+    }
+
+    location /api/player-events {
+        proxy_pass http://player-events;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_redirect off;
+        proxy_connect_timeout 90s;
+        proxy_read_timeout 90s;
+        proxy_send_timeout 90s;
+    }
+
+    location / {
+        try_files $uri /index.html;
+        add_header Strict-Transport-Security "max-age=1000; includeSubDomains" always;
+    }
+
     listen [::]:443 ssl ipv6only=on; # managed by Certbot
     listen 443 ssl; # managed by Certbot
     ssl_certificate /var/opt/nginx/fullchain.pem; # managed by Certbot
     ssl_certificate_key /var/opt/nginx/privkey.pem; # managed by Certbot
     include /var/opt/nginx/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /var/opt/nginx/ssl-dhparams.pem; # managed by Certbot
-
 }
 
 server {

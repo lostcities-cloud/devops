@@ -1,5 +1,4 @@
 job "gamestate" {
-
   datacenters = ["digital-ocean"]
 
   group "gamestate" {
@@ -9,8 +8,8 @@ job "gamestate" {
 
     service {
       name = "gamestate"
-      tags = ["urlprefix-/api/gamestate"]
       port = "service-port"
+      tags = ["urlprefix-/api/gamestate"]
 
       check {
         type = "http"
@@ -29,9 +28,14 @@ job "gamestate" {
         GOOGLE_APPLICATION_CREDENTIALS = "/home/cnb/.gcreds"
       }
 
+      logs {
+        max_files = 10
+        max_file_size = 10
+      }
+
       resources {
-        cpu    = 500
-        memory = 450
+        cpu = 500
+        memory = 500
       }
 
       config {
