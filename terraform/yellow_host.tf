@@ -35,6 +35,7 @@ resource "digitalocean_droplet" "yellow_host_droplet" {
       "systemctl disable --now apt-daily.timer",
       "rm /var/lib/dpkg/lock /var/lib/dpkg/lock-frontend",
       "mkdir -p /var/opt/nginx",
+
       // TODO put this in ansible with lookup: https://docs.ansible.com/ansible/2.9/plugins/lookup/hashi_vault.html
       "cat <<EOF > /var/opt/nginx/options-ssl-nginx.conf",
         data.vault_generic_secret.vault_secrets.data["options-ssl-nginx.conf"],
@@ -48,6 +49,7 @@ resource "digitalocean_droplet" "yellow_host_droplet" {
       "cat <<EOF > /var/opt/nginx/ssl-dhparams.pem",
         data.vault_generic_secret.vault_secrets.data["ssl-dhparams.pem"],
       "EOF",
+
     ]
   }
 }

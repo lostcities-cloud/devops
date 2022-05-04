@@ -1,35 +1,40 @@
 job "loki" {
   datacenters = ["digital-ocean"]
-  //type        = "service"
-  #update {
-  #  max_parallel      = 1
-  #  health_check      = "checks"
-  #  min_healthy_time  = "10s"
-  #  healthy_deadline  = "3m"
-  #  progress_deadline = "5m"
-  #}
+
+  constraint {
+    attribute = "${node.unique.name}"
+    value = "lostcities-green"
+  }
+
+  update {
+    max_parallel      = 1
+    health_check      = "checks"
+    min_healthy_time  = "10s"
+    healthy_deadline  = "3m"
+    progress_deadline = "5m"
+  }
 
 
 
   group "loki" {
     count = 1
-    #restart {
-    #  attempts = 3
-    #  interval = "5m"
-    #  delay    = "25s"
-    #  mode     = "delay"
-    #}
+    restart {
+      attempts = 3
+      interval = "5m"
+      delay    = "25s"
+      mode     = "delay"
+    }
     network {
       port "loki" {
         to = 3100
       }
     }
 
-    volume "loki" {
-      type      = "host"
-      read_only = false
-      source    = "loki"
-    }
+    //volume "loki" {
+    //  type      = "host"
+    //  read_only = false
+    //  source    = "loki"
+    //}
 
     task "loki" {
       driver = "docker"
@@ -74,11 +79,11 @@ job "loki" {
 
         ports = ["loki"]
       }
-      volume_mount {
-        volume      = "loki"
-        destination = "/loki"
-        read_only   = false
-      }
+      //volume_mount {
+      //  volume      = "loki"
+      //  destination = "/loki"
+      //  read_only   = false
+      //}
       template {
         data = <<EOH
 auth_enabled: false

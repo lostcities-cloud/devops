@@ -29,6 +29,7 @@ resource "digitalocean_droplet" "green_host_droplet" {
       "kill $(ps aux | grep '/usr/lib/apt/apt.systemd.daily' | awk '{print $2}')  || true",
       "systemctl disable --now apt-daily.timer",
       "rm /var/lib/dpkg/lock /var/lib/dpkg/lock-frontend",
+      "mkdir -p /var/opt/loki"
     ]
   }
 }
