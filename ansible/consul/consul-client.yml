@@ -1,7 +1,7 @@
 ---
 - name: Setting up consul
   user: root
-  hosts: red, blue, green, yellow
+  hosts: red, blue, green, yellow, white
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:

@@ -6,8 +6,23 @@ job "nginx" {
     value = "lostcities-yellow"
   }
 
+  update {
+    max_parallel      = 1
+    health_check      = "checks"
+    min_healthy_time  = "10s"
+    healthy_deadline  = "3m"
+    progress_deadline = "5m"
+  }
+
   group "nginx" {
     count = 1
+
+    restart {
+      attempts = 10
+      interval = "5m"
+      delay    = "25s"
+      mode     = "delay"
+    }
 
     network {
       port "http" {

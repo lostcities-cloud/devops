@@ -2,7 +2,20 @@ job "matches" {
 
   datacenters = ["digital-ocean"]
 
+  update {
+    max_parallel = 2
+  }
+
   group "matches" {
+    count = 1
+
+    restart {
+      attempts = 10
+      interval = "5m"
+      delay    = "25s"
+      mode     = "delay"
+    }
+
     network {
       port "service-port" {
         to = 8091

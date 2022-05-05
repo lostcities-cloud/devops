@@ -1,7 +1,20 @@
 job "prometheus" {
   datacenters = ["digital-ocean"]
 
+  update {
+    max_parallel = 1
+  }
+
   group "prometheus" {
+    count = 1
+
+    restart {
+      attempts = 10
+      interval = "5m"
+      delay    = "25s"
+      mode     = "delay"
+    }
+
     network {
       port "http" {
         to = "9090"
@@ -47,41 +60,26 @@ scrape_configs:
     honor_labels: true
     metrics_path: /api/gamestate/actuator/prometheus
     static_configs:
-    {{ range service "gamestate" }}
-      - targets: [ "{{ .Address }}:{{ .Port }}" ]
-    {{ else }}
-      - targets: [ ]
-    {{ end }}
+      - targets: [{{ range service "gamestate" }} "{{ .Address }}:{{ .Port }}", {{ else }} {{ end }} ]
 
   - job_name: accounts-observability
     honor_labels: true
     metrics_path: /api/accounts/actuator/prometheus
     static_configs:
-    {{ range service "accounts" }}
-      - targets: [ "{{ .Address }}:{{ .Port }}"]
-    {{ else }}
-      - targets: [ ]
-    {{ end }}
+      - targets: [{{ range service "accounts" }} "{{ .Address }}:{{ .Port }}", {{ else }}  {{ end }}]
 
   - job_name: matches-observability
     honor_labels: true
     metrics_path: /api/matches/actuator/prometheus
     static_configs:
-    {{ range service "matches" }}
-      - targets: [ "{{ .Address }}:{{ .Port }}"]
-    {{ else }}
-      - targets: [ ]
-    {{ end }}
+      - targets: [ {{ range service "matches" }} "{{ .Address }}:{{ .Port }}", {{ else }} {{ end }}]
 
   - job_name: player-events-observability
     honor_labels: true
     metrics_path: /api/player-events/actuator/prometheus
     static_configs:
-    {{ range service "player-events" }}
-      - targets: [ "{{ .Address }}:{{ .Port }}"]
-    {{ else }}
-      - targets: [ ]
-    {{ end }}
+      - targets: [ {{ range service "player-events" }} "{{ .Address }}:{{ .Port }}", {{ else }} {{ end }} ]
+
 EOF
 
         destination   = "local/prometheus.yml"

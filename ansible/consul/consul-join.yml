@@ -10,3 +10,4 @@
       consul join {{ green_ipv4 }}
       consul join {{ red_ipv4 }}
       consul join {{ yellow_ipv4 }}
+      consul join {{ white_ipv4 }}

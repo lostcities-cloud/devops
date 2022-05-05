@@ -4,33 +4,33 @@ const machines = ['[nginx]', null, '[all:vars]']
 
 let config = {
     'blue:vars': {
-        app_name: 'lostcities-accounts',
-        port: '8090',
+
         app_version: 'latest',
         host: 'blue.lostcities.dev',
         nomad_join: 'red.lostcities.dev',
         box: 'blue'
 
     },
+    'white:vars': {
+        app_version: 'latest',
+        host: 'white.lostcities.dev',
+        nomad_join: 'red.lostcities.dev',
+        box: 'white'
+
+    },
     'red:vars':  {
-        app_name: 'lostcities-matches',
-        port: '8091',
         app_version: 'latest',
         host: 'red.lostcities.dev',
         nomad_join: 'blue.lostcities.dev',
         box: 'red'
     },
     'yellow:vars': {
-        app_name: 'lostcities-gamestate',
-        port: '8092',
         app_version: 'latest',
         host: 'yellow.lostcities.dev',
         nomad_join: 'blue.lostcities.dev',
         box: 'yellow'
     },
     'green:vars': {
-        app_name: 'lostcities-player-events',
-        port: '8093',
         app_version: 'latest',
         host: 'green.lostcities.dev',
         nomad_join: 'blue.lostcities.dev',

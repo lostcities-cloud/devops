@@ -1,7 +1,7 @@
 ---
 - name: Allowing hashicorp ports.
   user: root
-  hosts: red, blue, green, yellow
+  hosts: red, blue, green, yellow, white
   tasks:
 
   - name: Allow 4646

@@ -65,11 +65,15 @@ node tfstate.js ./terraform/terraform.tfstate > ./inventory.ini
 
 ansible_retry ./ansible/full-provision-playbook.yml
 
+nomad job run ./nomad/loki.hcl
+nomad job run ./nomad/vector.hcl
+nomad job run ./nomad/prometheus.hcl
+
 nomad job run ./nomad/accounts.hcl
 nomad job run ./nomad/gamestate.hcl
 nomad job run ./nomad/matches.hcl
 nomad job run ./nomad/player-events.hcl
-nomad job run ./nomad/prometheus.hcl
-nomad job run ./nomad/vector.hcl
+
+
 nomad job run ./nomad/nginx.hcl
-nomad job run ./nomad/loki.hcl
+

@@ -1,7 +1,8 @@
 job "vector" {
   datacenters = ["digital-ocean"]
-  # system job, runs on all nodes
+
   type = "system"
+
   update {
     min_healthy_time = "10s"
     healthy_deadline = "5m"
@@ -10,6 +11,7 @@ job "vector" {
   }
   group "vector" {
     count = 1
+
     restart {
       attempts = 3
       interval = "10m"
@@ -31,12 +33,25 @@ job "vector" {
     }
 
     ephemeral_disk {
-      size    = 500
+      size    = 2000
       sticky  = true
     }
 
     task "vector" {
       driver = "docker"
+
+      kill_timeout = "30s"
+
+      service {
+        check {
+          port     = "api"
+          type     = "http"
+          path     = "/health"
+          interval = "30s"
+          timeout  = "5s"
+        }
+      }
+
       config {
         image = "timberio/vector:0.14.X-alpine"
         ports = ["api"]
@@ -47,11 +62,13 @@ job "vector" {
         destination = "/var/run/docker.sock"
         read_only = true
       }
+
       # Vector won't start unless the sinks(backends) configured are healthy
       env {
         VECTOR_CONFIG = "local/vector.toml"
         VECTOR_REQUIRE_HEALTHY = "true"
       }
+
       # resource limits are a good idea because you don't want your log collection to consume all resources available
       resources {
         cpu    = 256 # 500 MHz
@@ -94,16 +111,6 @@ job "vector" {
             remove_label_fields = true
         EOH
       }
-      service {
-        check {
-          port     = "api"
-          type     = "http"
-          path     = "/health"
-          interval = "30s"
-          timeout  = "5s"
-        }
-      }
-      kill_timeout = "30s"
     }
   }
 }

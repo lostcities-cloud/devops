@@ -17,3 +17,6 @@
     - name: Join Yellow
       ansible.builtin.shell:
         cmd: nomad server join {{ yellow_ipv4 }}
+    - name: Join Red
+      ansible.builtin.shell:
+        cmd: nomad server join {{ white_ipv4 }}
